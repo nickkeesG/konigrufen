@@ -13,11 +13,17 @@ class Game_State:
     def __init__(self, players, model_list):
         self.players = players
         self.model_list = model_list
+        self.king_called = ''
 
 class Player:
     def __init__(self, name, hand):
         self.name = name
         self.hand = hand
+
+def call_king(game_state):
+    suits = ['heart', 'diamond', 'spade', 'club']
+    random.shuffle(suits)
+    game_state.king_called = suits[0]
 
 def init_cards():
     cards = []
@@ -50,8 +56,7 @@ def init_cards():
     random.shuffle(cards)
     return cards
 
-def init_players(cards):
-    player_names = ['Bruno', 'Jakob', 'Katrin', 'Nadine']
+def init_players(player_names, cards):
     players = []
     for name in player_names:
         hand = []

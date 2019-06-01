@@ -1,18 +1,20 @@
 import random
 import pygame
-from game_environment import *
+from game import *
 from krypke import *
 from view import *
+
+player_names = ['Bruno', 'Jakob', 'Katrin', 'Nadine']
 
 def update_view(game_state, view):
     if view.krypke_mode:
         print("have not yet implemented krypke view")
         init_view(view)
-        display_krypke(view)
+        display_krypke_view(game_state, view)
         if view.dropdown_open:
             display_dropdown(view, game_state.model_list)
     else:
-        display_cards(game_state, view)
+        display_game_view(game_state, view)
     
     pygame.display.update()
 
@@ -23,9 +25,12 @@ def main():
     screen = None #this is the screen where everything will be displayed
 
     cards = init_cards()                #deal the cards to all players
-    players = init_players(cards)
-    model_list = init_krypke_models()   #initialize the krypke models 
+    players = init_players(player_names, cards)
+    model_list = init_krypke_models(players)   #initialize the krypke models 
     game_state = Game_State(players, model_list) 
+
+    #the zeroth turn
+    call_king(game_state)
 
     view = View(screen)
     update_view(game_state, view) #first update initializes the view
@@ -40,7 +45,7 @@ def main():
                     if event.type == pygame.QUIT:
                         return
                     if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_RIGHT:
+                        if event.key == pygame.K_SPACE:
                             print("turn transitions have not been implemented yet")
                             turn_over = True
                             game_state.krypke_mode = False
@@ -51,14 +56,18 @@ def main():
                             update_view(game_state, view)
                 x, y = pygame.mouse.get_pos()
                 mouse_pressed = pygame.mouse.get_pressed()[0]
-                mouse_over_dropdown = is_mouse_over_dropdown(x,y)
-                if mouse_pressed and mouse_over_dropdown:
-                    if not dropdown_clicked_already:
+                if mouse_pressed:
+                    if mouse_over_dropdown(x,y) and not dropdown_clicked_already:
                         dropdown_clicked_already = True
                         view.dropdown_open = not view.dropdown_open
                         update_view(game_state, view)
-                if not mouse_pressed:
+                    if view.dropdown_open and mouse_over_dropdown_item(x,y,len(game_state.model_list)):
+                        view.dropdown_open = False
+                        update_view(game_state, view)
+                        select_dropdown_item(x,y, game_state.model_list, view)
+                else:
                     dropdown_clicked_already = False
+                
 
                     
                 
