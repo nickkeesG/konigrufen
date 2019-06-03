@@ -30,6 +30,18 @@ def blit_card(card, location, orientation, view):
         location = (location[0] - card_size[1]/2, location[1] - card_size[0]/2)
     view.screen.blit(img, location)
 
+
+def played_cards(game_state,view):
+    positions = [(627,241), (745,316),
+                 (649,393),(521,325)]
+    i=0
+    for player in game_state.players:
+        if player.played_card != None:
+            card = player.played_card
+            blit_card(card,positions[i],i*90,view)
+        i+=1
+
+
 def display_cards(game_state, view):
     #these are the positions of the first cards displayed
     positions = [(screen_size[0] - board_size[0] + 150,70), (screen_size[0] - 70, 100), (screen_size[0] - 150, screen_size[1] -70), (screen_size[0] - board_size[0] + 70, screen_size[1] - 100)]
@@ -79,7 +91,7 @@ def display_game_view(game_state, view):
     init_view(view)
     display_cards(game_state, view)
     display_sidebar(game_state, view)
-
+    played_cards(game_state,view)
 def display_krypke_view(game_state, view):
 
     #display dropdown select

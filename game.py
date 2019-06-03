@@ -19,6 +19,21 @@ class Player:
     def __init__(self, name, hand):
         self.name = name
         self.hand = hand
+        self.recent_contain = None
+        self.played_card = None
+
+    def contains(self, request):
+        for card in self.hand:
+            if card.suit == request.suit and card.value == request.value:
+                self.recent_contain = card
+                return 1
+        return 0
+
+    def play(self, card):
+        if self.contains(card):
+            self.played_card = self.recent_contain
+            self.hand.remove(self.played_card)
+
 
 def call_king(game_state):
     suits = ['heart', 'diamond', 'spade', 'club']

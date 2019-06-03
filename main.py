@@ -41,11 +41,16 @@ def main():
             turn_over = False
             dropdown_clicked_already = False
             while not turn_over:
+                #if player.contains(Card('heart', 8, 0)):
+                #    print(player.name + ":I have it!!!")
+                #    player.play(Card('heart', 8, 0))
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         return
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
+                            nrcards = len(player.hand)-1
+                            player.play(player.hand[random.randint(0,nrcards)])
                             print("turn transitions have not been implemented yet")
                             turn_over = True
                             game_state.krypke_mode = False
@@ -57,6 +62,7 @@ def main():
                 x, y = pygame.mouse.get_pos()
                 mouse_pressed = pygame.mouse.get_pressed()[0]
                 if mouse_pressed:
+                    print(pygame.mouse.get_pos())
                     if mouse_over_dropdown(x,y) and not dropdown_clicked_already:
                         dropdown_clicked_already = True
                         view.dropdown_open = not view.dropdown_open
@@ -67,7 +73,7 @@ def main():
                         select_dropdown_item(x,y, game_state.model_list, view)
                 else:
                     dropdown_clicked_already = False
-                
+
 
                     
                 
