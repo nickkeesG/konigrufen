@@ -7,6 +7,8 @@ screen_size = (1050, 650)
 board_size = (800, 650)
 card_size = (45, 90)
 
+pi = 3.14159
+
 FONT = 'ubuntu'
 dropdown = pygame.Rect(30, 50, 200, 20)
 dropdown_item_height = 20
@@ -110,12 +112,41 @@ def display_model(model, view):
     #display the worlds
     center = (screen_size[0] - board_size[0]/2, board_size[1]/2)
     for i in range(0,len(model.worlds)):
-        position = (world_positions[i][0]+center[0], world_positions[i][1]+center[1])
+        model.worlds[i].position = (world_positions[i][0]+center[0], world_positions[i][1]+center[1])
         world_color = (0, 0, 0)
         if model.worlds[i].true_world:
             world_color = (255, 255, 0)
         world_name = model_font.render(model.worlds[i].name, 1, world_color)
-        view.screen.blit(world_name, (position))
+        view.screen.blit(world_name, (model.worlds[i].position))
+
+    #display the relations
+    offset = 10
+    for i in range(0, len(model.agents)):
+        relations = model.relations[i]
+        for r in relations:
+            (s, e) = r
+            
+            if not s == e: #the non-reflexive case
+                start_pos = model.worlds[s].position
+                end_pos = model.worlds[e].position
+
+                #format line location to look better
+                average = (start_pos[0]*0.5 + end_pos[0]*0.5 + 80, start_pos[1]*0.5 + end_pos[1]*0.5 + 20)
+                start_pos = (start_pos[0]*0.8 + average[0]*0.2, start_pos[1]*0.8 + average[1]*0.2)
+                end_pos = (end_pos[0]*0.8 + average[0]*0.2, end_pos[1]*0.8 + average[1]*0.2)
+
+                #apply the offset
+                diff = (start_pos[0]-end_pos[0], start_pos[1]-end_pos[1])
+                direction = (diff[1]*abs(diff[1])/(abs(diff[0]*diff[0])+abs(diff[1]*diff[1])), diff[0]*abs(diff[0])/(abs(diff[0]*diff[0])+abs(diff[1]*diff[1])))
+                direction = (-direction[0]*((len(model.agents)/2)- i)*offset, direction[1]*((len(model.agents)/2)- i)*offset)
+                start_pos = (start_pos[0]+direction[0], start_pos[1]+direction[1])
+                end_pos = (end_pos[0]+direction[0], end_pos[1]+direction[1])
+
+                pygame.draw.line(view.screen, agent_colors[i], start_pos , end_pos, 2)
+            else: #the reflexive case
+                size = i*offset
+                pygame.draw.arc(view.screen, agent_colors[i], ((model.worlds[s].position[0]-size-20, model.worlds[s].position[1]-size-20), (30+size, 30+size)),0*pi, 1.5*pi)
+
 
     pygame.display.update() #update view will not be called, so we must update the display here
 
