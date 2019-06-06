@@ -15,6 +15,8 @@ class Game_State:
         self.model_list = model_list
         self.king_called = ''
 
+
+
 class Player:
     def __init__(self, name, hand):
         self.name = name
@@ -32,13 +34,69 @@ class Player:
     def play(self, card):
         if self.contains(card):
             self.played_card = self.recent_contain
+            print(self.name + " played " + self.played_card.suit + " " + str(self.played_card.value))
             self.hand.remove(self.played_card)
 
+    def determineCard(self, leading_suit):
+        nrcards = len(self.hand) - 1  # get number of cards
+        if leading_suit != None: #If not the first player
+            return_card = None
+            return_trump = None
+            suit_match = False
+            trump_match = False
+            for card in self.hand:
+                if card.suit == leading_suit:
+                    suit_match = True
+                    return_card = card
+                elif card.suit == 'trump':
+                    trump_match = True
+                    return_trump = card
+
+            if suit_match: #play suit if you posess leading suit
+                return return_card
+            elif trump_match: #play trump if you don't have leading suit
+                return return_trump
+        return self.hand[random.randint(0, nrcards)] #play random card if you don't have either
+
+
+
+def determineWinner(players, leading_suit):
+    max = -1
+    trumpMax = -1
+    winner = None
+    trumpInPlay = False
+    for player in players:
+        value = player.played_card.value
+        suit = player.played_card.suit
+        if suit == 'trump' and leading_suit != 'trump':
+            trumpInPlay = True
+        if (not trumpInPlay and suit == leading_suit and value > max) or (trumpInPlay and suit == 'trump' and value > trumpMax):
+            if trumpInPlay:
+                trumpMax = value
+                winner = player
+            else:
+                max = value
+                winner = player
+    print(winner.name + " won this round!")
+    return winner
 
 def call_king(game_state):
     suits = ['heart', 'diamond', 'spade', 'club']
     random.shuffle(suits)
     game_state.king_called = suits[0]
+
+def executePlay(player, winning_player, played_card_counter, leading_suit, players, endOfRound):
+    card_to_be_played = player.determineCard(leading_suit) #pick random card
+    if player == winning_player:  # Reset winning player variable and set leading suit
+        leading_suit = card_to_be_played.suit
+        winning_player = None
+    player.play(card_to_be_played)
+    played_card_counter += 1
+    if played_card_counter == 4: #check if all players put a card, if so determine the winner of the round
+        winning_player = determineWinner(players, leading_suit)
+        played_card_counter = 0
+        endOfRound = True
+    return winning_player, played_card_counter, leading_suit, endOfRound
 
 def init_cards():
     cards = []

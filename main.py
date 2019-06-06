@@ -3,6 +3,7 @@ import pygame
 from game import *
 from krypke import *
 from view import *
+from game import *
 
 player_names = ['Bruno', 'Jakob', 'Katrin', 'Nadine']
 
@@ -26,7 +27,7 @@ def main():
 
     cards = init_cards()                #deal the cards to all players
     players = init_players(player_names, cards)
-    model_list = init_krypke_models(players)   #initialize the krypke models 
+    model_list = init_krypke_models(players)   #initialize the krypke models
     game_state = Game_State(players, model_list) 
 
     #the zeroth turn
@@ -34,27 +35,31 @@ def main():
 
     view = View(screen)
     update_view(game_state, view) #first update initializes the view
-
     game_over = False
+    winning_player = players[0]
+    played_card_counter = 0
+    leading_suit = None
+    endOfRound = False
     while not game_over:        #GAME LOOP
         for player in players:
             turn_over = False
             dropdown_clicked_already = False
             while not turn_over:
-                #if player.contains(Card('heart', 8, 0)):
-                #    print(player.name + ":I have it!!!")
-                #    player.play(Card('heart', 8, 0))
+                if winning_player != None and player != winning_player: #Make sure the winning player gets to start
+                    break
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         return
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
-                            nrcards = len(player.hand)-1
-                            player.play(player.hand[random.randint(0,nrcards)])
-                            print("turn transitions have not been implemented yet")
+                            winning_player, played_card_counter, leading_suit, endOfRound = executePlay(player, winning_player, played_card_counter, leading_suit, players, endOfRound)
                             turn_over = True
                             game_state.krypke_mode = False
                             update_view(game_state, view)
+                            if endOfRound:
+                                for player in players:
+                                    player.played_card = None
+                                    endOfRound = False
                         if event.key == pygame.K_k :
                             view.krypke_mode = not view.krypke_mode
                             view.dropdown_open = False
