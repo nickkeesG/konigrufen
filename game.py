@@ -13,7 +13,7 @@ class Game_State:
     def __init__(self, players, model_list):
         self.players = players
         self.model_list = model_list
-        self.king_called = ''
+        self.king_called = None
 
 
 
@@ -23,7 +23,7 @@ class Player:
         self.hand = hand
         self.recent_contain = None
         self.played_card = None
-
+        self.teammates = []
     def contains(self, request):
         for card in self.hand:
             if card.suit == request.suit and card.value == request.value:
@@ -56,7 +56,7 @@ class Player:
                 return return_card
             elif trump_match: #play trump if you don't have leading suit
                 return return_trump
-        return self.hand[random.randint(0, nrcards)] #play random card if you don't have either
+        return self.hand[random.randint(0, nrcards)] #play random card in all other cases
 
 
 
@@ -79,6 +79,36 @@ def determineWinner(players, leading_suit):
                 winner = player
     print(winner.name + " won this round!")
     return winner
+
+def determineTeams(players, game_state, caller):
+    called_king = game_state.king_called
+    if caller.contains(Card(called_king,8,None)): #If the caller is playing alone make 1 vs 3 teams
+        caller.teammates.append(caller)
+        for player in players:
+            if player != caller:
+                for teammate in players:
+                    if teammate != caller:
+                        player.teammates.append(teammate)
+    else:
+        opponent = None
+        for player in players:
+            if player != caller:
+                if player.contains(Card(called_king,8,None)):
+                    player.teammates.append(caller)
+                    caller.teammates.append(player)
+                elif opponent == None:
+                    opponent = player
+                else:
+                    player.teammates.append(opponent)
+                    opponent.teammates.append(player)
+
+    printTeams(players)
+
+def printTeams(players):
+    for player in players:
+        print(player.name + " is in a team with:")
+        for mate in player.teammates:
+            print(mate.name)
 
 def call_king(game_state):
     suits = ['heart', 'diamond', 'spade', 'club']

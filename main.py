@@ -32,6 +32,7 @@ def main():
 
     #the zeroth turn
     call_king(game_state)
+    determineTeams(players, game_state, players[0])
 
     view = View(screen)
     update_view(game_state, view) #first update initializes the view
