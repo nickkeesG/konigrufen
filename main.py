@@ -53,7 +53,7 @@ def main():
                         return
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
-                            winning_player, played_card_counter, leading_suit, endOfRound = executePlay(player, winning_player, played_card_counter, leading_suit, players, endOfRound)
+                            winning_player, played_card_counter, leading_suit, endOfRound, game_state = executePlay(player, winning_player, played_card_counter, leading_suit, players, endOfRound, game_state)
                             turn_over = True
                             game_state.krypke_mode = False
                             update_view(game_state, view)

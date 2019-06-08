@@ -4,16 +4,20 @@ import random
 from view import *
 
 class Card:
-    def __init__(self,suit,value,image):
+    def __init__(self,suit,value,image,score):
         self.suit = suit
         self.value = value
         self.image = image
+        self.score = score
 
 class Game_State:
     def __init__(self, players, model_list):
         self.players = players
         self.model_list = model_list
         self.king_called = None
+        self.cards_played = []
+
+
 
 
 
@@ -24,6 +28,9 @@ class Player:
         self.recent_contain = None
         self.played_card = None
         self.teammates = []
+        self.teamWonCards = []
+        self.finalScore = 0
+
     def contains(self, request):
         for card in self.hand:
             if card.suit == request.suit and card.value == request.value:
@@ -31,10 +38,11 @@ class Player:
                 return 1
         return 0
 
-    def play(self, card):
+    def play(self, card, game_state):
         if self.contains(card):
             self.played_card = self.recent_contain
             print(self.name + " played " + self.played_card.suit + " " + str(self.played_card.value))
+            game_state.cards_played.append(self.played_card)
             self.hand.remove(self.played_card)
 
     def determineCard(self, leading_suit):
@@ -60,7 +68,7 @@ class Player:
 
 
 
-def determineWinner(players, leading_suit):
+def determineWinner(players, leading_suit, game_state):
     max = -1
     trumpMax = -1
     winner = None
@@ -78,28 +86,57 @@ def determineWinner(players, leading_suit):
                 max = value
                 winner = player
     print(winner.name + " won this round!")
+    winner.teamWonCards.extend(game_state.cards_played)
+    game_state.cards_played = []
     return winner
+
+def determineWinningTeam(players):
+    for player in players:
+        ctr = 0
+        sum = 0
+        idx = 0
+        for card in player.teamWonCards:
+            sum += card.score
+            ctr += 1
+            print(idx)
+            print(len(player.teamWonCards))
+            if ctr == 3 or idx == len(player.teamWonCards)-1:
+                player.finalScore += (sum + 1)
+                print(player.finalScore)
+                ctr = 0
+                sum = 0
+            idx += 1
+            #change the 35 limit here because we only play 48 cards, not 54
+        if player.finalScore >= 35:
+            print(player.name + " won this game with "+str(player.finalScore)+" points")
+        else:
+            print(player.name + " lost this game with "+str(player.finalScore)+" points")
+
+
 
 def determineTeams(players, game_state, caller):
     called_king = game_state.king_called
-    if caller.contains(Card(called_king,8,None)): #If the caller is playing alone make 1 vs 3 teams
+    if caller.contains(Card(called_king,8,None,4)): #If the caller is playing alone make 1 vs 3 teams
         caller.teammates.append(caller)
         for player in players:
             if player != caller:
                 for teammate in players:
                     if teammate != caller:
                         player.teammates.append(teammate)
+                        player.teamWonCards = teammate.teamWonCards
     else:
         opponent = None
         for player in players:
             if player != caller:
-                if player.contains(Card(called_king,8,None)):
+                if player.contains(Card(called_king,8,None,4)):
                     player.teammates.append(caller)
+                    player.teamWonCards = caller.teamWonCards
                     caller.teammates.append(player)
                 elif opponent == None:
                     opponent = player
                 else:
                     player.teammates.append(opponent)
+                    player.teamWonCards = opponent.teamWonCards
                     opponent.teammates.append(player)
 
     printTeams(players)
@@ -115,38 +152,45 @@ def call_king(game_state):
     random.shuffle(suits)
     game_state.king_called = suits[0]
 
-def executePlay(player, winning_player, played_card_counter, leading_suit, players, endOfRound):
+def executePlay(player, winning_player, played_card_counter, leading_suit, players, endOfRound, game_state):
     card_to_be_played = player.determineCard(leading_suit) #pick random card
     if player == winning_player:  # Reset winning player variable and set leading suit
         leading_suit = card_to_be_played.suit
         winning_player = None
-    player.play(card_to_be_played)
+    player.play(card_to_be_played, game_state)
     played_card_counter += 1
+    print("won cards: " + str(len(player.teamWonCards)))
     if played_card_counter == 4: #check if all players put a card, if so determine the winner of the round
-        winning_player = determineWinner(players, leading_suit)
+        winning_player = determineWinner(players, leading_suit, game_state)
         played_card_counter = 0
         endOfRound = True
-    return winning_player, played_card_counter, leading_suit, endOfRound
+        if not winning_player.hand:  # if the last card is played, determine winning team
+            determineWinningTeam(players)
+    return winning_player, played_card_counter, leading_suit, endOfRound, game_state
 
 def init_cards():
     cards = []
     #trump cards are simplified to 1-22 (the joker is counted as 22)
     img = load_image('joker.png')
-    cards.append(Card('trump',22,img))
-    for i in range(1, 22): 
+    cards.append(Card('trump',22,img,4))
+    for i in range(1, 22):
+        if i == 1 or i == 21:
+            score = 4
+        else:
+            score = 0
         img = load_image('trump'+str(i)+'.png')
-        cards.append(Card('trump', i, img))
+        cards.append(Card('trump', i, img, score))
 
     suits = ['heart', 'diamond', 'spade', 'club']
     for s in suits: #suit cards are simplified to 1-8, where 8 is the king
         img = load_image(s + '_k.png')      #king
-        cards.append(Card(s, 8, img))
+        cards.append(Card(s, 8, img,4))
         img = load_image(s + '_q.png')      #Queen
-        cards.append(Card(s, 7, img))
+        cards.append(Card(s, 7, img,3))
         img = load_image(s + '_c.png')      #Cavalier
-        cards.append(Card(s, 6, img))
+        cards.append(Card(s, 6, img,2))
         img = load_image(s + '_j.png')      #Jack
-        cards.append(Card(s, 5, img))
+        cards.append(Card(s, 5, img,1))
 
         number_cards = ['_7', '_8', '_9', '_10']
         if s == 'heart' or s == 'diamond': #red numbers go in the opposite direction
@@ -154,8 +198,8 @@ def init_cards():
         
         for i in range(1,5):
             img = load_image(s + number_cards[i-1] + '.png')
-            cards.append(Card(s, i, img))    
-
+            cards.append(Card(s, i, img,0))
+    print(len(cards))
     random.shuffle(cards)
     return cards
 
