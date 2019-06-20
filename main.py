@@ -4,9 +4,9 @@ from game import *
 from krypke import *
 from view import *
 from game import *
-
+import time
 player_names = ['Bruno', 'Jakob', 'Katrin', 'Nadine']
-
+useKnowledge = True
 def update_view(game_state, view):
     if view.krypke_mode:
         print("have not yet implemented krypke view")
@@ -28,12 +28,12 @@ def main():
     cards = init_cards()                #deal the cards to all players
     players = init_players(player_names, cards)
     model_list = init_krypke_models(players)   #initialize the krypke models
-    game_state = Game_State(players, model_list) 
+    game_state = Game_State(players, model_list, useKnowledge)
 
     #the zeroth turn
     call_king(game_state)
     determineTeams(players, game_state, players[0])
-
+    updateKnowledge(players,game_state)
     view = View(screen)
     update_view(game_state, view) #first update initializes the view
     game_over = False
@@ -41,6 +41,7 @@ def main():
     played_card_counter = 0
     leading_suit = None
     endOfRound = False
+
     while not game_over:        #GAME LOOP
         for player in players:
             turn_over = False
@@ -48,6 +49,9 @@ def main():
             while not turn_over:
                 if winning_player != None and player != winning_player: #Make sure the winning player gets to start
                     break
+
+                game_state.playerTurn = player
+                update_view(game_state, view)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         return
@@ -58,6 +62,8 @@ def main():
                             game_state.krypke_mode = False
                             update_view(game_state, view)
                             if endOfRound:
+                                time.sleep(1)
+                                leading_suit = None
                                 for player in players:
                                     player.played_card = None
                                     endOfRound = False
@@ -79,10 +85,7 @@ def main():
                         select_dropdown_item(x,y, game_state.model_list, view)
                 else:
                     dropdown_clicked_already = False
-
-
-                    
-                
+                game_state.previous_player = player
 
 if __name__ == "__main__":
     main()

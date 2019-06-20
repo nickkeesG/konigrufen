@@ -3,7 +3,7 @@ import random
 import pygame
 from krypke import *
 
-screen_size = (1050, 650)
+screen_size = (1150, 650)
 board_size = (800, 650)
 card_size = (45, 90)
 
@@ -34,8 +34,8 @@ def blit_card(card, location, orientation, view):
 
 
 def played_cards(game_state,view):
-    positions = [(627,241), (745,316),
-                 (649,393),(521,325)]
+    positions = [(727,241), (845,316),
+                 (749,393),(621,325)]
     i=0
     for player in game_state.players:
         if player.played_card != None:
@@ -94,6 +94,7 @@ def display_game_view(game_state, view):
     display_cards(game_state, view)
     display_sidebar(game_state, view)
     played_cards(game_state,view)
+
 def display_krypke_view(game_state, view):
 
     #display dropdown select
@@ -162,6 +163,47 @@ def display_model(model, view):
 
     pygame.display.update() #update view will not be called, so we must update the display here
 
+def getMaxKnowledge(player):
+    if player.knowledge.hasHighestCard:
+        return player.name +" knows (s)he's got the highest card"
+
+def getMateKnowledge(player):
+    if player.knowledge.knowsTeammate:
+        string = player.name +" knows (s)he's in a team with"
+        for mate in player.teammates:
+            string = string + " " + mate.name
+            if mate == player.name:
+                string = player.name + " knows (s)he's playing alone"
+        return string
+
+def getTrumpKnowledge(player):
+    if player.knowledge.trumpAdvantage:
+        return player.name + " knows (s)he has the majority of trump cards"
+
+def getPlayedCard(game_state):
+    if game_state.recentCard != None:
+        player = game_state.previous_player
+        card = game_state.recentCard
+        cardName = None
+        if card.suit != 'trump':
+            if card.value < 5:
+                cardName = str(card.value)
+            elif card.value == 5:
+                cardName = 'Jack'
+            elif card.value == 6:
+                cardName = 'Cavalier'
+            elif card.value == 7:
+                cardName = 'Queen'
+            elif card.value == 8:
+                cardName = 'King'
+        else:
+            if card.value == 22:
+                cardName = 'Joker'
+            else:
+                cardName = str(card.value)
+
+        return "Public announcement: " + player.name + " played " + cardName + " of " + card.suit
+
 def display_sidebar(game_state, view):
     sidebar_font = pygame.font.SysFont(FONT, 16)
     instruction_a = sidebar_font.render('press k for krypke view', 1, (0, 0, 0))
@@ -171,8 +213,19 @@ def display_sidebar(game_state, view):
 
     king_called_message_a = sidebar_font.render(str(game_state.players[0].name) + ' is playing and has called', 1, (0, 0, 0))
     king_called_message_b = sidebar_font.render(' for the king of ' + game_state.king_called + 's', 1, (0, 0, 0))
+
+    highest_card_message = sidebar_font.render(getMaxKnowledge(game_state.playerTurn),1,(0,0,0))
+    teammate_message = sidebar_font.render(getMateKnowledge(game_state.playerTurn),1,(0,0,0))
+    trump_advantage = sidebar_font.render(getTrumpKnowledge(game_state.playerTurn),1,(0,0,0))
+    played_card = sidebar_font.render(getPlayedCard(game_state),1,(0,0,0))
+
     view.screen.blit(king_called_message_a, (10, 70))
     view.screen.blit(king_called_message_b, (10, 90))
+    view.screen.blit(highest_card_message,(10,130))
+    view.screen.blit(teammate_message,(10,170))
+    view.screen.blit(trump_advantage,(10, 210))
+
+    view.screen.blit(played_card,(10,250))
 
 def init_view(view):
     view.screen = pygame.display.set_mode((screen_size[0], screen_size[1]))
