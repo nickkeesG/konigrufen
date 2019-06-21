@@ -41,7 +41,7 @@ def main():
     played_card_counter = 0
     leading_suit = None
     endOfRound = False
-
+    kripkeOn = False
     while not game_over:        #GAME LOOP
         for player in players:
             turn_over = False
@@ -49,9 +49,9 @@ def main():
             while not turn_over:
                 if winning_player != None and player != winning_player: #Make sure the winning player gets to start
                     break
-
-                game_state.playerTurn = player
-                update_view(game_state, view)
+                if not kripkeOn:
+                    game_state.playerTurn = player
+                    update_view(game_state, view)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         return
@@ -68,6 +68,10 @@ def main():
                                     player.played_card = None
                                     endOfRound = False
                         if event.key == pygame.K_k :
+                            if kripkeOn:
+                                kripkeOn=False
+                            else:
+                                kripkeOn = True
                             view.krypke_mode = not view.krypke_mode
                             view.dropdown_open = False
                             update_view(game_state, view)
