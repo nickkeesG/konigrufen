@@ -120,25 +120,23 @@ def display_krypke_view(game_state, view):
 def display_model(model, view):
     model_font = pygame.font.SysFont(FONT, 16)
     model_title = model_font.render(model.name, 1, (0, 0, 0))
-    view.screen.blit(model_title, ((screen_size[0] - board_size[0]/2 - 300), 20))
 
+    view.screen.blit(model_title, ((screen_size[0] - board_size[0]/2 - 300), 20))
     #display the worlds
     center = (screen_size[0] - board_size[0]/2, board_size[1]/2)
-    for i in range(0,len(model.worlds)):
-        model.worlds[i].position = (world_positions[i][0]+center[0], world_positions[i][1]+center[1])
-        world_color = (0, 0, 0)
-        if model.worlds[i].true_world:
-            world_color = (255, 255, 0)
-        world_name = model_font.render(model.worlds[i].name, 1, world_color)
-        view.screen.blit(world_name, (model.worlds[i].position))
+
+    for i in range(0, len(model.worlds)):
+        model.worlds[i].position = (world_positions[i][0] + center[0], world_positions[i][1] + center[1])
+
 
     #display the relations
     offset = 10
     for i in range(0, len(model.agents)):
         relations = model.relations[i]
+        print(len(relations))
         for r in relations:
             (s, e) = r
-            
+
             if not s == e: #the non-reflexive case
                 start_pos = model.worlds[s].position
                 end_pos = model.worlds[e].position
@@ -160,6 +158,23 @@ def display_model(model, view):
                 size = i*offset
                 pygame.draw.arc(view.screen, agent_colors[i], ((model.worlds[s].position[0]-size-20, model.worlds[s].position[1]-size-20), (30+size, 30+size)),0*pi, 1.5*pi)
 
+
+    for i in range(0,len(model.worlds)):
+        model.worlds[i].position = (world_positions[i][0]+center[0], world_positions[i][1]+center[1])
+        world_color = (0, 0, 0)
+        if model.worlds[i].true_world:
+            world_color = (255, 255, 0)
+        if type(model.worlds[i]) == playerWorld:
+            world_name = model_font.render(model.worlds[i].name, 1, world_color)
+            view.screen.blit(world_name, (model.worlds[i].position))
+        elif type(model.worlds[i]) == teamWorld:
+            world = model.worlds[i]
+            if len(world.team1) == 1:
+                name = world.team1[0] + " vs " + world.team2[0] + ", " + world.team2[1] + " and " + world.team2[2]
+            else:
+                name = world.team1[0] + " and " + world.team1[1] + " vs " + world.team2[0] + " and " + world.team2[1]
+            world_name = model_font.render(name, 1, world_color)
+            view.screen.blit(world_name, (world.position))
 
     pygame.display.update() #update view will not be called, so we must update the display here
 

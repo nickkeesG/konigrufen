@@ -23,7 +23,9 @@ class Game_State:
         self.useKnowledge = useKnowledge
         self.nrTrumps = 20
         self.previous_player = None
-
+        self.initMode = True
+        self.teamsKnown = False
+        self.teamIdx = None
 class Knowledge:
     def __init__(self,hasHighestCard,knowsTeammate, trumpAdvantage):
         self.hasHighestCard = hasHighestCard
@@ -200,6 +202,25 @@ def updateMaxCardKnowledge(players,game_state):
                 player.knowledge.hasHighestCard = True
                 print(player.name + " has the highest card with value:" + str(max))
 
+    updateKripkeMaxCard(players, game_state)
+
+def updateKripkeMaxCard(players, game_state):
+    high_card = game_state.model_list[1]
+
+    for i,player in enumerate(players):
+        high_card.relations[i] = []
+        high_card.worlds[i].true_world = player.knowledge.hasHighestCard
+        if player.knowledge.hasHighestCard:
+            exclude = i
+            high_card.relations[i].append((i, i))
+
+    for i in range(0,4):
+        for j in range(0,4):
+            for k in range(j,4):
+                if i != exclude and j != i and i != k:
+                    high_card.relations[i].append((j, k))
+
+
 def updateTeammateKnowledge(players,game_state):
     if not game_state.called_king_played:
         called_king = game_state.king_called
@@ -216,6 +237,56 @@ def updateTeammateKnowledge(players,game_state):
     else:
         for player in players:
             player.knowledge.knowsTeammate = True
+            game_state.teamsKnown = True
+            print("TEAMS ARE COMMONG KNOWLEDGE KNOW MAYBE ADD THIS TO VIEW")
+    updateKripkeTeams(players,game_state)
+
+def updateKripkeTeams(players,game_state):
+    teams = game_state.model_list[0]
+
+    if game_state.initMode:
+        #set true world process
+        for player in players:
+            if player.knowledge.knowsTeammate:
+                teamWorlds = teams.worlds
+                if len(player.teammates) == 1 and player.teammates[0] != player:
+                    trueTeam = player.teammates.copy()
+                    trueTeam.append(player)
+                    for i,tw in enumerate(teamWorlds):
+                        if(len(tw.team1) == 2):
+                            if (tw.team1[0] == trueTeam[0].name and tw.team1[1] == trueTeam[1].name) or (
+                                    tw.team1[1] == trueTeam[0].name and tw.team1[0] == trueTeam[1].name) or (
+                                    tw.team2[0] == trueTeam[0].name and tw.team2[1] == trueTeam[1].name) or (
+                                    tw.team2[1] == trueTeam[0].name and tw.team2[0] == trueTeam[1].name):
+                                tw.true_world = True
+                                trueIdx = i
+                                game_state.teamIdx = i
+                else:
+                    for i,tw in enumerate(teamWorlds):
+                        if (len(tw.team1) == 1 and tw.team1[0] == player.name) or (len(tw.team2)==1 and tw.team2[0] == player.name):
+                            tw.true_world = True
+                            trueIdx = i
+                            game_state.teamIdx = i
+                break
+        game_state.initMode = False
+    if not game_state.teamsKnown:
+        for i, p in enumerate(players):
+            if p.knowledge.knowsTeammate:
+                exclude = i
+
+                teams.relations[i].append((game_state.teamIdx, game_state.teamIdx))
+
+        for i in range(0, 4):
+            for j in range(0, 4):
+                for k in range(j, 4):
+                    if i != exclude and j != i and i != k:
+                        teams.relations[i].append((j, k))
+    else:
+        for i, p in enumerate(players):
+            teams.relations[i] = []
+            teams.relations[i].append((game_state.teamIdx, game_state.teamIdx))
+
+
 
 
 def updateTrumpKnowledge(players,game_state):

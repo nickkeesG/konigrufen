@@ -62,7 +62,7 @@ def main():
                             game_state.krypke_mode = False
                             update_view(game_state, view)
                             if endOfRound:
-                                time.sleep(1)
+                                #time.sleep(1)
                                 leading_suit = None
                                 for player in players:
                                     player.played_card = None
