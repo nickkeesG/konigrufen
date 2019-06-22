@@ -22,20 +22,11 @@ class Krypke_Model:
         self.worlds = []
         self.relations = [[] for a in self.agents]
 
-def init_krypke_models(players):
-    model_list = []
-    model_list.append(Krypke_Model("model1", players))
-
-    model_list.append(init_highest_card(players))
-
-    model_list.append(Krypke_Model("model3", players))
-    return model_list
 
 def init_krypke_models(players):
     model_list = []
     model_list.append(init_teamknowledge(players))
     model_list.append(init_highest_card(players))
-    model_list.append(Krypke_Model("model3", players))
     return model_list
 
 def init_highest_card(players):

@@ -235,7 +235,7 @@ def getWinningTeam(game_state):
 
 def getSuitLack(game_state):
     if game_state.noSuitPlayer != None:
-        return "Public announcement:" + game_state.noSuitPlayer.name + " does not have " +game_state.leading_suit+ " anymore!"
+        return "Public announcement: " + game_state.noSuitPlayer.name + " does not have " +game_state.leading_suit+ " anymore!"
 
 
 def getOppSuitLack(player):
@@ -247,6 +247,13 @@ def getOppSuitLack(player):
             return player.name + " knows one of the opponents doesn't have:" + string
         else:
             return player.name + " knows the opponent team lack all suits"
+
+def getReason(player):
+    if player.reason:
+        return player.name + ": '" + player.reason+"'"
+
+def getTrumps(game_state):
+    return "Nr. of trumps: " + str(game_state.nrTrumps) + "/20"
 
 def display_sidebar(game_state, view):
     sidebar_font = pygame.font.SysFont(FONT, 16)
@@ -264,24 +271,31 @@ def display_sidebar(game_state, view):
     teammate_message = sidebar_font.render(getMateKnowledge(game_state.playerTurn),1,(0,0,0))
     trump_advantage = sidebar_font.render(getTrumpKnowledge(game_state.playerTurn),1,(0,0,0))
     opponent_lack = sidebar_font.render(getOppSuitLack(game_state.playerTurn),1,(0,0,0))
+    reason = sidebar_font.render(getReason(game_state.playerTurn),1,(0,0,0))
+
 
     played_card = sidebar_font.render(getPlayedCard(game_state),1,(0,0,0))
     no_suit = sidebar_font.render(getSuitLack(game_state),1,(0,0,0))
     winner = sidebar_font.render(getWinner(game_state),1,(0,0,0))
     winningTeam = sidebar_font.render(getWinningTeam(game_state),1,(0,0,0))
 
-    view.screen.blit(king_called_message_a, (10, 90))
-    view.screen.blit(king_called_message_b, (10, 110))
+    trumps = sidebar_font.render(getTrumps(game_state),1,(0,0,0))
 
-    view.screen.blit(highest_card_message,(10,150))
+    view.screen.blit(king_called_message_a, (10, 110))
+    view.screen.blit(king_called_message_b, (10, 130))
+
+    view.screen.blit(highest_card_message,(10,170))
     view.screen.blit(teammate_message,(10,190))
     view.screen.blit(trump_advantage,(10, 210))
     view.screen.blit(opponent_lack,(10, 230))
+    view.screen.blit(reason,(10, 250))
 
-    view.screen.blit(played_card,(10,270))
-    view.screen.blit(no_suit,(10,290))
-    view.screen.blit(winner,(10,310))
-    view.screen.blit(winningTeam,(10,350))
+    view.screen.blit(played_card,(10,290))
+    view.screen.blit(no_suit,(10,310))
+    view.screen.blit(winner,(10,330))
+    view.screen.blit(winningTeam,(10,370))
+
+    view.screen.blit(trumps,(10,460))
 
 def init_view(view):
     view.screen = pygame.display.set_mode((screen_size[0], screen_size[1]))

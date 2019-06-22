@@ -42,6 +42,7 @@ def startGame():
     leading_suit = None
     endOfRound = False
     kripkeOn = False
+    previous_player = players[0]
     while not game_over:        #GAME LOOP
         for player in players:
             turn_over = False
@@ -51,8 +52,8 @@ def startGame():
                     break
 
                 if not kripkeOn:
-                    game_state.playerTurn = player
-                    update_view(game_state, view)
+                    game_state.playerTurn = previous_player
+                    #update_view(game_state, view)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         return
@@ -100,7 +101,7 @@ def startGame():
                         select_dropdown_item(x,y, game_state.model_list, view)
                 else:
                     dropdown_clicked_already = False
-
+                previous_player = player
 
 def main():
     startGame()
