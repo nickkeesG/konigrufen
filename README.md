@@ -1,4 +1,4 @@
-<img src="sample_images/sample1.jpg" alt="hi" class="inline"/>
+<img src="sample_images/sample1.jpg" alt="hi" class="inline" width="800" height="400"/>
 
 # Introduction
 
