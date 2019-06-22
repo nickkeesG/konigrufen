@@ -8,3 +8,13 @@ When playing games which are not perfect information games, where there is relev
 ```
 
 # Konigrufen
+```diff
++ what is the game
+```
+
+## Implementation
+```diff
++ python and stuff
+```
+
+## The Rules
