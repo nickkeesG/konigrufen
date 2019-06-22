@@ -19,7 +19,7 @@ def update_view(game_state, view):
     
     pygame.display.update()
 
-def main():
+def startGame():
 
     start_pygame()
 
@@ -49,6 +49,7 @@ def main():
             while not turn_over:
                 if winning_player != None and player != winning_player: #Make sure the winning player gets to start
                     break
+
                 if not kripkeOn:
                     game_state.playerTurn = player
                     update_view(game_state, view)
@@ -60,13 +61,18 @@ def main():
                             winning_player, played_card_counter, leading_suit, endOfRound, game_state = executePlay(player, winning_player, played_card_counter, leading_suit, players, endOfRound, game_state)
                             turn_over = True
                             game_state.krypke_mode = False
+
+                            game_state.previous_player = player
                             update_view(game_state, view)
+
                             if endOfRound:
-                                #time.sleep(1)
+                                #time.sleep(2)
                                 leading_suit = None
                                 for player in players:
                                     player.played_card = None
                                     endOfRound = False
+                                    game_state.winner = None
+
                         if event.key == pygame.K_k :
                             if kripkeOn:
                                 kripkeOn=False
@@ -75,6 +81,11 @@ def main():
                             view.krypke_mode = not view.krypke_mode
                             view.dropdown_open = False
                             update_view(game_state, view)
+                        if event.key == pygame.K_n:
+                            pygame.display.quit()
+                            pygame.quit()
+                            startGame()
+
                 x, y = pygame.mouse.get_pos()
                 mouse_pressed = pygame.mouse.get_pressed()[0]
                 if mouse_pressed:
@@ -89,7 +100,10 @@ def main():
                         select_dropdown_item(x,y, game_state.model_list, view)
                 else:
                     dropdown_clicked_already = False
-                game_state.previous_player = player
+
+
+def main():
+    startGame()
 
 if __name__ == "__main__":
     main()

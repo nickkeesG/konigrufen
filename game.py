@@ -26,11 +26,19 @@ class Game_State:
         self.initMode = True
         self.teamsKnown = False
         self.teamIdx = None
+        self.winner = None
+        self.winningTeam = []
+        self.winningTeamPT = None
+        self.noSuitPlayer = None
+        self.leading_suit = None
+
 class Knowledge:
     def __init__(self,hasHighestCard,knowsTeammate, trumpAdvantage):
         self.hasHighestCard = hasHighestCard
         self.knowsTeammate = knowsTeammate
         self.trumpAdvantage = trumpAdvantage
+        self.opponentLacksSuit = False
+        self.lackedSuits = []
 
 class Player:
     def __init__(self, name, hand, knowledge):
@@ -42,6 +50,8 @@ class Player:
         self.teamWonCards = []
         self.finalScore = 0
         self.knowledge = knowledge
+        self.alone = False
+        self.opponents = []
 
     def contains(self, request):
         for card in self.hand:
@@ -64,6 +74,8 @@ class Player:
                 game_state.nrTrumps -= 1
 
     def determineCard(self, leading_suit,game_state):
+        game_state.noSuitPlayer = None
+        game_state.leading_suit = leading_suit
         nrcards = len(self.hand) - 1  # get number of cards
         if leading_suit != None: #If not the first player
             return_card = None
@@ -81,7 +93,10 @@ class Player:
             if suit_match: #play suit if you posess leading suit
                 return return_card
             elif trump_match: #play trump if you don't have leading suit
+                updateNoSuit(self, game_state, leading_suit)
                 return return_trump
+            else:
+                updateNoSuit(self,game_state,leading_suit)
         elif game_state.useKnowledge: #If we want the agents to use knowledge
             if self.knowledge.hasHighestCard: #If you know you have the highest card, play it.
                 return getHighestCard(self)
@@ -89,8 +104,22 @@ class Player:
                 for trump in self.hand:
                     if trump.suit == 'trump':
                         return trump
+            elif self.knowledge.opponentLacksSuit:
+                for lackSuit in self.knowledge.lackedSuits:
+                    for card in self.hand:
+                        if card.suit == lackSuit:
+                            return card
         return self.hand[random.randint(0, nrcards)] #play random card in all other cases
 
+
+def updateNoSuit(player,game_state,leading_suit):
+    game_state.noSuitPlayer = player
+    game_state.leading_suit = leading_suit
+    for p in game_state.players:
+        if player in p.opponents:
+            p.knowledge.opponentLacksSuit = True
+            if leading_suit not in p.knowledge.lackedSuits:
+                p.knowledge.lackedSuits.append(leading_suit)
 
 def getHighestCard(player):
     max = -1
@@ -126,14 +155,15 @@ def determineWinner(players, leading_suit, game_state):
             else:
                 max = value
                 winner = player
-    print(winner.name + " won this round!")
+    print(winner.name + " won this round and starts the next one!")
+    game_state.winner = winner
     winner.teamWonCards.extend(game_state.cards_played)
     game_state.cards_played = []
     return winner
 
 
 
-def determineWinningTeam(players):
+def determineWinningTeam(players,game_state):
     for player in players:
         ctr = 0
         sum = 0
@@ -149,6 +179,8 @@ def determineWinningTeam(players):
             idx += 1
             #change the 35 limit here because we only play 48 cards, not 54
         if player.finalScore >= 35:
+            game_state.winningTeam.append(player)
+            game_state.winningTeamPT = player.finalScore
             print(player.name + " won this game with "+str(player.finalScore)+" points")
         else:
             print(player.name + " lost this game with "+str(player.finalScore)+" points")
@@ -159,6 +191,7 @@ def determineTeams(players, game_state, caller):
     called_king = game_state.king_called
     if caller.contains(Card(called_king,8,None,4)): #If the caller is playing alone make 1 vs 3 teams
         caller.teammates.append(caller)
+        caller.alone = True
         for player in players:
             if player != caller:
                 for teammate in players:
@@ -182,10 +215,22 @@ def determineTeams(players, game_state, caller):
 
     printTeams(players)
 
+    for player in players:
+        for p in players:
+            if p != player and p not in player.teammates:
+                player.opponents.append(p)
+
+
 def printTeams(players):
     for player in players:
         print(player.name + " is in a team with:")
         for mate in player.teammates:
+            print(mate.name)
+
+def printOpponents(players):
+    for player in players:
+        print(player.name + " is an opponent of:")
+        for mate in player.opponents:
             print(mate.name)
 
 def call_king(game_state):
@@ -304,7 +349,11 @@ def updateKnowledge(players, game_state):
     updateTeammateKnowledge(players, game_state)
     updateTrumpKnowledge(players, game_state)
 
-
+def checkIfLastPlay(players):
+    for player in players:
+        if player.hand != []:
+            return False
+    return True
 def executePlay(player, winning_player, played_card_counter, leading_suit, players, endOfRound, game_state):
     card_to_be_played = player.determineCard(leading_suit,game_state) #pick random card
     game_state.recentCard = card_to_be_played
@@ -312,7 +361,9 @@ def executePlay(player, winning_player, played_card_counter, leading_suit, playe
         leading_suit = card_to_be_played.suit
         winning_player = None
     player.play(card_to_be_played, game_state)
-    updateKnowledge(players,game_state)
+    if not checkIfLastPlay(players):
+        updateKnowledge(players,game_state)
+
     played_card_counter += 1
 
     print("won cards: " + str(len(player.teamWonCards)))
@@ -321,7 +372,7 @@ def executePlay(player, winning_player, played_card_counter, leading_suit, playe
         played_card_counter = 0
         endOfRound = True
         if not winning_player.hand:  # if the last card is played, determine winning team
-            determineWinningTeam(players)
+            determineWinningTeam(players,game_state)
     return winning_player, played_card_counter, leading_suit, endOfRound, game_state
 
 def init_cards():

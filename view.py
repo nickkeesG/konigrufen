@@ -3,7 +3,7 @@ import random
 import pygame
 from krypke import *
 
-screen_size = (1150, 650)
+screen_size = (1175, 650)
 board_size = (800, 650)
 card_size = (45, 90)
 
@@ -187,7 +187,7 @@ def getMateKnowledge(player):
         string = player.name +" knows (s)he's in a team with"
         for mate in player.teammates:
             string = string + " " + mate.name
-            if mate == player.name:
+            if player.alone:
                 string = player.name + " knows (s)he's playing alone"
         return string
 
@@ -219,12 +219,43 @@ def getPlayedCard(game_state):
 
         return "Public announcement: " + player.name + " played " + cardName + " of " + card.suit
 
+def getWinner(game_state):
+    if game_state.winner != None:
+        return game_state.winner.name + " won the round and starts!"
+
+def getWinningTeam(game_state):
+    if game_state.winningTeamPT != None:
+        length = len(game_state.winningTeam)
+        if length == 1:
+            return game_state.winningTeam[0].name + " won the game with " + str(game_state.winningTeam[0].finalScore) + " points"
+        elif length == 2:
+            return game_state.winningTeam[0].name + " and " + game_state.winningTeam[1].name + " won the game with " + str(game_state.winningTeam[0].finalScore) + " points"
+        else:
+            return game_state.winningTeam[0].name + ", " + game_state.winningTeam[1].name + " and " + game_state.winningTeam[2].name + " won the game with " + str(game_state.winningTeam[0].finalScore) + "points"
+
+def getSuitLack(game_state):
+    if game_state.noSuitPlayer != None:
+        return "Public announcement:" + game_state.noSuitPlayer.name + " does not have " +game_state.leading_suit+ " anymore!"
+
+
+def getOppSuitLack(player):
+    if player.knowledge.opponentLacksSuit and player.knowledge.knowsTeammate:
+        if len(player.knowledge.lackedSuits) != 4:
+            string = ""
+            for suit in player.knowledge.lackedSuits:
+                string = string + " " + suit
+            return player.name + " knows one of the opponents doesn't have:" + string
+        else:
+            return player.name + " knows the opponent team lack all suits"
+
 def display_sidebar(game_state, view):
     sidebar_font = pygame.font.SysFont(FONT, 16)
     instruction_a = sidebar_font.render('press k for krypke view', 1, (0, 0, 0))
+    instruction_n = sidebar_font.render('press n to start a new game', 1, (0, 0, 0))
     instruction_b = sidebar_font.render('press space for next turn', 1, (0, 0, 0))
     view.screen.blit(instruction_a, (10,10))
-    view.screen.blit(instruction_b, (10,30))
+    view.screen.blit(instruction_n, (10,30))
+    view.screen.blit(instruction_b, (10,50))
 
     king_called_message_a = sidebar_font.render(str(game_state.players[0].name) + ' is playing and has called', 1, (0, 0, 0))
     king_called_message_b = sidebar_font.render(' for the king of ' + game_state.king_called + 's', 1, (0, 0, 0))
@@ -232,15 +263,25 @@ def display_sidebar(game_state, view):
     highest_card_message = sidebar_font.render(getMaxKnowledge(game_state.playerTurn),1,(0,0,0))
     teammate_message = sidebar_font.render(getMateKnowledge(game_state.playerTurn),1,(0,0,0))
     trump_advantage = sidebar_font.render(getTrumpKnowledge(game_state.playerTurn),1,(0,0,0))
+    opponent_lack = sidebar_font.render(getOppSuitLack(game_state.playerTurn),1,(0,0,0))
+
     played_card = sidebar_font.render(getPlayedCard(game_state),1,(0,0,0))
+    no_suit = sidebar_font.render(getSuitLack(game_state),1,(0,0,0))
+    winner = sidebar_font.render(getWinner(game_state),1,(0,0,0))
+    winningTeam = sidebar_font.render(getWinningTeam(game_state),1,(0,0,0))
 
-    view.screen.blit(king_called_message_a, (10, 70))
-    view.screen.blit(king_called_message_b, (10, 90))
-    view.screen.blit(highest_card_message,(10,130))
-    view.screen.blit(teammate_message,(10,170))
+    view.screen.blit(king_called_message_a, (10, 90))
+    view.screen.blit(king_called_message_b, (10, 110))
+
+    view.screen.blit(highest_card_message,(10,150))
+    view.screen.blit(teammate_message,(10,190))
     view.screen.blit(trump_advantage,(10, 210))
+    view.screen.blit(opponent_lack,(10, 230))
 
-    view.screen.blit(played_card,(10,250))
+    view.screen.blit(played_card,(10,270))
+    view.screen.blit(no_suit,(10,290))
+    view.screen.blit(winner,(10,310))
+    view.screen.blit(winningTeam,(10,350))
 
 def init_view(view):
     view.screen = pygame.display.set_mode((screen_size[0], screen_size[1]))
