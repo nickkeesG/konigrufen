@@ -102,9 +102,11 @@ Below an example can be found of how the game itself looks like. We have four pl
 <img src="sample_images/gamegui.PNG" alt="hi" class="inline" width="600" height="400"/>
 
 ### Kripke Model View
-When pressing 'k' the user can access the Kripke View. In this view there is a dropdown menu where the user can select a Kripke model they would like to see. In the image below is shown how such a Kripke model looks like for modelling the knowledge of each player about what the teams are. As Bruno always starts the game these are the possible worlds that are left in the game. Bruno also calls the King, therefore the player in possession of this King knows the true world of teams. 
+When pressing 'k' the user can access the Kripke View. In this view there is a dropdown menu where the user can select a Kripke model they would like to see. In the image below is shown how such a Kripke model looks like for modelling the knowledge of each player about what the teams are. As Bruno always starts the game these are the possible worlds that are left in the game. Bruno also calls the King, therefore the player in possession of this King knows the true world of team (colored yellow). In this example Nadine has the called king and therefore is the only one that knows she and Bruno form a team. 
 <img src="sample_images/kripke1.PNG" alt="hi" class="inline" width="750" height="400"/>
 
+As the game proceeds, more information is presented to the agents and eventually the other agents also find out what the teams are. When an agent acquires such knowledge the Kripke model gets updated accordingly which is shown in the image below, where now all agents are aware of the teams. 
 <img src="sample_images/kripke2.PNG" alt="hi" class="inline" width="750" height="400"/>
 
+Another example, shown below, is each agents knowledge about who possesses the highest card in similar fashion as the team-knowledge model. 
 <img src="sample_images/kripke3.PNG" alt="hi" class="inline" width="750" height="400"/>
