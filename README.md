@@ -18,6 +18,8 @@ Players collect points over many games, but for this project we will only be sim
 
 ## The Rules
 
+The 54 cards in play are divided into 5 suits, the 4 regular suits (hearts, clubs, diamonds and spades) as well as a fifth suit of trump cards. Each of the 4 regular suits has 8 cards, divided into 4 face cards and 4 number cards, the only quirk relating to these is that with the red suit number cards, the lowest in number is the highest in value/strength and for the two black colored suits, the higher number wins. There are 22 trump cards, 21 numbered trump cards and one fool which in this set of rules counts as the 22nd and highest trump card.
+
 | __Red Suits__ | __Black Suits__ |
 |---------------|-----------------|
 | King          | King            |
@@ -28,9 +30,6 @@ Players collect points over many games, but for this project we will only be sim
 | 2             | 9               |
 | 3             | 8               |
 | 4             | 7               |
-
-
-The 54 cards in play are divided into 5 suits, the 4 regular suits (hearts, clubs, diamonds and spades) as well as a fifth suit of trump cards. Each of the 4 regular suits has 8 cards, divided into 4 face cards and 4 number cards, the only quirk relating to these is that with the red suit number cards, the lowest in number is the highest in value/strength and for the two black colored suits, the higher number wins. There are 22 trump cards, 21 numbered trump cards and one fool which in this set of rules counts as the 22nd and highest trump card.
 
 The game starts with first 6 cards being set aside for later, then each player getting dealt 12 cards. The cards are dealt in a counterclockwise order starting with the person sitting immediately to the left of the dealer. Once the cards are dealt, each player is asked to state their intentions for this game, this is done in the opposite (clockwise) order starting with the person sitting to the right of the dealer. Each player may either do nothing or play. There are several things someone who wants to make a play can decide, all relating to the 6 cards set aside at the start of the game. They may play with 3, 2, 1 or none of the cards in the pile set aside or the 'talon'. This means that the talon is either divided into two sets of 3 cards (in order) 3 sets of 2 cards or 6 individual cards by the dealer (or someone else in case the dealer is the one making the play). Before the cards in the talon are opened, the person making the play must call a king of one of the four suits to his side. In the event that this king is in the talon, they now play alone. The play maker is allowed to take one of the sets of cards from the talon, either one of the groupings of 3 if this was the number they chose or one of the other configurations. They take these cards into their deck and place the corresponding number of cards face down in front of them as a start to their collection pile. any points in this pile will count towards the total number of points they manage to accrue in the trick taking stage of the game.
 
