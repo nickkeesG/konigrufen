@@ -57,12 +57,12 @@ As mentioned in the section of the `Player` class, there is a function `determin
 When the player starts and usage of knowledge is enabled in the game, it reasons as follows:
 - If the agent knows that it has the highest card (i.e. `knowledge.hasHighestCard` is true), then it will always play that card as first to be certain it wins that trick and can start again.
 - If the agent knows that it has the majority of trump cards (i.e. `knowledge.trumpAdvantage` is true) then it will play an arbitrary trump card in order to make sure the other players lose more trump cards and being more likely to win the trick.
-- If the agent knows that one of its opponents does not possess a certain suit (i.e. `opponentLacksSuit is true`), and the agent itself does have that suit, then the agent will play that suit. However, this knowledge cannot be used if the agent does not know who its opponents/teammates are. Therefore it is first required to have that knowledge (i.e. `knowsTeammate` is true) in order to strategically use this knowledge. At the start of the game just one player has this knowledge which may be a big advantage.
+- If the agent knows that one of its opponents does not possess a certain suit (i.e. `knowledge.opponentLacksSuit is true`), and the agent itself does have that suit, then the agent will play that suit. However, this knowledge cannot be used if the agent does not know who its opponents/teammates are. Therefore it is first required to have that knowledge (i.e. `knowledge.knowsTeammate` is true) in order to strategically use this knowledge. At the start of the game just one player has this knowledge which may be a big advantage.
 
 #### The player doesn't start
-When the player doesn't start, there is not much strategic play it can do as it has to adhere to the rules. However, it can try to give its teammates and its opponents as many and as few points respectively as possible:
+When the player doesn't start, there is not much strategic play it can do as it has to adhere to the rules. However, it can try to give its teammates and its opponents as many and as few points respectively as possible. Here the reasoning is presented in order:
 - If I possess the suit that is played, I will play that suit.
 - If I don't possess the suit that is played and it is not a trump, I play a trump card if I have it.
-- If I know who my teammate is and my teammate started this trick, then I play a high valued card.
+- If I know who my teammate is and my teammate started this trick , then I play a high valued card.
 - If I know who my opponent is and my opponent started the trick, then I play a low valued card.
 - If I don't know who my teammate is then I just play a random card.
