@@ -91,4 +91,7 @@ This class represents the world of a single agent and has `(name, true_world, po
 This class represents the world of a team and has `(team1, team2, true_world, position)`. Where `team1` and `team2` state the teams in this possible world.
 
 ## Visualization (view.py)
-In this class everything we implemented is visualized for the user. 
+In this class everything we implemented is visualized for the user. Using Pygame allows us to visualize all the components of the games which we consider as three components: on the left the message box which displays all information of the game such as player's reasoning, knowledge and common game information. On the right we have the actual game's GUI, in which the cards of the agents are visible and which cards are being played. Finally we have implemented a Kripke view in which Kripke models can be selected (this view can be accessed by pressing 'k'. 
+### Message box
+In the message box first some instructions are displayed for the user: pressing spacebar makes the game go to the next turn, pressing 'n' makes a new game, pressing 'k' enables the Kripke-view. 
+<img src="sample_images/sample1.jpg" alt="hi" class="inline" width="800" height="400"/>
