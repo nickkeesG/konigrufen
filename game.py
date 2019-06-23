@@ -151,6 +151,8 @@ def getHighestCard(player):
             maxCard = card
     return maxCard
 
+
+
 def getLowestCard(player):
     min = 9999
     minCard = None
