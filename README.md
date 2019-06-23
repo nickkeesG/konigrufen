@@ -97,4 +97,5 @@ In the message box first some instructions are displayed for the user: pressing 
 
 <img src="sample_images/msgbox.PNG" alt="hi" class="inline" width="250" height="400"/><img src="sample_images/msgbox2.PNG" alt="hi" class="inline" width="250" height="400"/><img src="sample_images/msgbox3.PNG" alt="hi" class="inline" width="250" height="400"/> 
 
+### Game GUI
 
