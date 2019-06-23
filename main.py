@@ -7,9 +7,9 @@ from game import *
 import time
 player_names = ['Bruno', 'Jakob', 'Katrin', 'Nadine']
 useKnowledge = True
+
 def update_view(game_state, view):
     if view.krypke_mode:
-        print("have not yet implemented krypke view")
         init_view(view)
         display_krypke_view(game_state, view)
         if view.dropdown_open:
@@ -59,20 +59,22 @@ def startGame():
                         return
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
-                            winning_player, played_card_counter, leading_suit, endOfRound, game_state = executePlay(player, winning_player, played_card_counter, leading_suit, players, endOfRound, game_state)
-                            turn_over = True
-                            game_state.krypke_mode = False
+                            if not game_state.gameOver:
+                                winning_player, played_card_counter, leading_suit, endOfRound, game_state = executePlay(player, winning_player, played_card_counter, leading_suit, players, endOfRound, game_state)
+                                turn_over = True
+                                game_state.krypke_mode = False
 
-                            game_state.previous_player = player
-                            update_view(game_state, view)
+                                game_state.previous_player = player
+                                update_view(game_state, view)
 
-                            if endOfRound:
-                                #time.sleep(2)
-                                leading_suit = None
-                                for player in players:
-                                    player.played_card = None
-                                    endOfRound = False
-                                    game_state.winner = None
+                                if endOfRound:
+                                    leading_suit = None
+                                    for player in players:
+                                        player.played_card = None
+                                        endOfRound = False
+                                        game_state.winner = None
+                            else:
+                                continue
 
                         if event.key == pygame.K_k :
                             if kripkeOn:
@@ -90,7 +92,6 @@ def startGame():
                 x, y = pygame.mouse.get_pos()
                 mouse_pressed = pygame.mouse.get_pressed()[0]
                 if mouse_pressed:
-                    print(pygame.mouse.get_pos())
                     if mouse_over_dropdown(x,y) and not dropdown_clicked_already:
                         dropdown_clicked_already = True
                         view.dropdown_open = not view.dropdown_open

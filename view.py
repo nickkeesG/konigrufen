@@ -3,7 +3,7 @@ import random
 import pygame
 from krypke import *
 
-screen_size = (1175, 650)
+screen_size = (1200, 650)
 board_size = (800, 650)
 card_size = (45, 90)
 
@@ -133,7 +133,6 @@ def display_model(model, view):
     offset = 10
     for i in range(0, len(model.agents)):
         relations = model.relations[i]
-        print(len(relations))
         for r in relations:
             (s, e) = r
 

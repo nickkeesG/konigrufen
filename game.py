@@ -31,7 +31,7 @@ class Game_State:
         self.winningTeamPT = None
         self.noSuitPlayer = None
         self.leading_suit = None
-
+        self.gameOver = False
 class Knowledge:
     def __init__(self,hasHighestCard,knowsTeammate, trumpAdvantage):
         self.hasHighestCard = hasHighestCard
@@ -100,9 +100,17 @@ class Player:
                 updateNoSuit(self, game_state, leading_suit)
                 return return_trump
             else:
-                self.reason = "I don't have the suit nor trump so I play a random card"
-                updateNoSuit(self,game_state,leading_suit)
-                return self.hand[random.randint(0, nrcards)]  # play random card in all other cases
+                updateNoSuit(self, game_state, leading_suit)
+                if self.knowledge.knowsTeammate:
+                    if winning_player in self.teammates:
+                        self.reason = "I can't follow, but my mate started so I put a high card"
+                        return getHighestCard(self)
+                    else:
+                        self.reason = "I can't follow and my opponents started, so I put a low card"
+                        return getLowestCard(self)
+                else:
+                    self.reason = "I can't follow and don't know the teams so I play a random card"
+                    return self.hand[random.randint(0, nrcards)]  # play random card in all other cases
         elif game_state.useKnowledge: #If we want the agents to use knowledge
             if self.knowledge.hasHighestCard: #If you know you have the highest card, play it.
                 self.reason = "I know I have the highest card so I play it"
@@ -116,7 +124,7 @@ class Player:
                 string = ""
                 for suit in self.knowledge.lackedSuits:
                     string = string + " " + suit
-                self.reason = "I know some of my opponents don't have"+string+" so I play such suits"
+                self.reason = "I know some of my opponents don't have"+string+" so I play that"
                 for lackSuit in self.knowledge.lackedSuits:
                     for card in self.hand:
                         if card.suit == lackSuit:
@@ -143,6 +151,16 @@ def getHighestCard(player):
             maxCard = card
     return maxCard
 
+def getLowestCard(player):
+    min = 9999
+    minCard = None
+    for card in player.hand:
+        if card.value < min:
+            min = card.value
+            minCard = card
+    return minCard
+
+
 def determineMaxCard(players,game_state):
     max = -1
     for player in players:
@@ -150,6 +168,8 @@ def determineMaxCard(players,game_state):
             if (game_state.nrTrumps > 0 and card.suit == 'trump' and card.value > max):
                 max = card.value
             elif (game_state.nrTrumps == 0 and card.value > max):
+                max = card.value
+            elif (card.value > max):
                 max = card.value
     return max
 
@@ -170,7 +190,6 @@ def determineWinner(players, leading_suit, game_state):
             else:
                 max = value
                 winner = player
-    print(winner.name + " won this round and starts the next one!")
     game_state.winner = winner
     winner.teamWonCards.extend(game_state.cards_played)
     game_state.cards_played = []
@@ -188,7 +207,6 @@ def determineWinningTeam(players,game_state):
             ctr += 1
             if ctr == 3 or idx == len(player.teamWonCards)-1:
                 player.finalScore += (sum + 1)
-                print(player.finalScore)
                 ctr = 0
                 sum = 0
             idx += 1
@@ -298,7 +316,7 @@ def updateTeammateKnowledge(players,game_state):
         for player in players:
             player.knowledge.knowsTeammate = True
             game_state.teamsKnown = True
-            print("TEAMS ARE COMMONG KNOWLEDGE KNOW MAYBE ADD THIS TO VIEW")
+
     updateKripkeTeams(players,game_state)
 
 def updateKripkeTeams(players,game_state):
@@ -381,7 +399,6 @@ def executePlay(player, winning_player, played_card_counter, leading_suit, playe
 
     played_card_counter += 1
 
-    print("won cards: " + str(len(player.teamWonCards)))
     if played_card_counter == 4: #check if all players put a card, if so determine the winner of the round
         winning_player = determineWinner(players, leading_suit, game_state)
         played_card_counter = 0
@@ -389,6 +406,7 @@ def executePlay(player, winning_player, played_card_counter, leading_suit, playe
 
         if not winning_player.hand:  # if the last card is played, determine winning team
             determineWinningTeam(players,game_state)
+            game_state.gameOver = True
     return winning_player, played_card_counter, leading_suit, endOfRound, game_state
 
 def init_cards():
@@ -427,7 +445,6 @@ def init_cards():
         for i in range(2,5):
             img = load_image(s + number_cards[i-1] + '.png')
             cards.append(Card(s, i, img,0))
-    print(len(cards))
     random.shuffle(cards)
     return cards
 
