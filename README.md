@@ -93,9 +93,9 @@ This class represents the world of a team and has `(team1, team2, true_world, po
 ## Visualization (view.py)
 In this class everything we implemented is visualized for the user. Using Pygame allows us to visualize all the components of the games which we consider as three components: on the left the message box which displays all information of the game such as player's reasoning, knowledge and common game information. On the right we have the actual game's GUI, in which the cards of the agents are visible and which cards are being played. Finally we have implemented a Kripke view in which Kripke models can be selected (this view can be accessed by pressing 'k'. 
 ### Message box
-In the message box first some instructions are displayed for the user: pressing spacebar makes the game go to the next turn, pressing 'n' makes a new game, pressing 'k' enables the Kripke-view. Additionally, for the agent currently playing its knowledge is displayed, after which it's reasoning is displayed for playing the card it played. Finally public announcements and common knowledge are displayed.
+In the message box first some instructions are displayed for the user: pressing spacebar makes the game go to the next turn, pressing 'n' makes a new game, pressing 'k' enables the Kripke-view. Additionally, for the agent currently playing its knowledge is displayed, after which it's reasoning is displayed for playing the card it played. Finally public announcements and common knowledge are displayed. Below some examples are presented of the message box at the start of the game, an intermediate stage of the game and the end of the game respectively.
 
 <img src="sample_images/msgbox.PNG" alt="hi" class="inline" width="250" height="400"/><img src="sample_images/msgbox2.PNG" alt="hi" class="inline" width="250" height="400"/><img src="sample_images/msgbox3.PNG" alt="hi" class="inline" width="250" height="400"/> 
 
 ### Game GUI
-
+<img src="sample_images/gamegui.PNG" alt="hi" class="inline" width="450" height="600"/>
