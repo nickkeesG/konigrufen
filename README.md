@@ -95,6 +95,6 @@ In this class everything we implemented is visualized for the user. Using Pygame
 ### Message box
 In the message box first some instructions are displayed for the user: pressing spacebar makes the game go to the next turn, pressing 'n' makes a new game, pressing 'k' enables the Kripke-view. 
 
-<img src="sample_images/msgbox.PNG" alt="hi" class="inline" width="100" height="400"/><img src="sample_images/msgbox2.PNG" alt="hi" class="inline" width="100" height="400"/><img src="sample_images/msgbox3.PNG" alt="hi" class="inline" width="100" height="400"/> 
+<img src="sample_images/msgbox.PNG" alt="hi" class="inline" width="200" height="400"/><img src="sample_images/msgbox2.PNG" alt="hi" class="inline" width="200" height="400"/><img src="sample_images/msgbox3.PNG" alt="hi" class="inline" width="200" height="400"/> 
 
 
