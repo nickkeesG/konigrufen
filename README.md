@@ -17,7 +17,7 @@ Konigrufen is a trick-taking game from Austria, which unlike many games uses tar
 Players collect points over many games, but for this project we will only be simulating individual games.
 
 ## The Rules
-/***
+
 | __Red Suits__ | __Black Suits__ |
 |---------------|-----------------|
 | King          | King            |
@@ -28,7 +28,7 @@ Players collect points over many games, but for this project we will only be sim
 | 2             | 9               |
 | 3             | 8               |
 | 4             | 7               |
-***/
+
 
 The 54 cards in play are divided into 5 suits, the 4 regular suits (hearts, clubs, diamonds and spades) as well as a fifth suit of trump cards. Each of the 4 regular suits has 8 cards, divided into 4 face cards and 4 number cards, the only quirk relating to these is that with the red suit number cards, the lowest in number is the highest in value/strength and for the two black colored suits, the higher number wins. There are 22 trump cards, 21 numbered trump cards and one fool which in this set of rules counts as the 22nd and highest trump card.
 
