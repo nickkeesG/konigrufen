@@ -102,8 +102,8 @@ In the message box first some instructions are displayed for the user: pressing 
 
 ### Kripke Model View
 
-<img src="sample_images/kripke1.PNG" alt="hi" class="inline" width="600" height="400"/>
+<img src="sample_images/kripke1.PNG" alt="hi" class="inline" width="750" height="400"/>
 
-<img src="sample_images/kripke2.PNG" alt="hi" class="inline" width="600" height="400"/>
+<img src="sample_images/kripke2.PNG" alt="hi" class="inline" width="750" height="400"/>
 
-<img src="sample_images/kripke3.PNG" alt="hi" class="inline" width="600" height="400"/>
+<img src="sample_images/kripke3.PNG" alt="hi" class="inline" width="750" height="400"/>
