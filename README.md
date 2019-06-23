@@ -12,6 +12,8 @@ In order to run our program, download the .zip or .tar.gz file. Additionally you
 ```diff
 + what is the game (klemen)
 ```
+<img src="sample_images/tarock.jpg" alt="hi" class="inline" width="400" height="800"/>
+
 ## The Rules
 ```diff
 + maybe include a nice table of the cards and their values or something (klemen)
