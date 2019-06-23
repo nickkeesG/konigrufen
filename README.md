@@ -99,3 +99,11 @@ In the message box first some instructions are displayed for the user: pressing 
 
 ### Game GUI
 <img src="sample_images/gamegui.PNG" alt="hi" class="inline" width="600" height="400"/>
+
+### Kripke Model View
+
+<img src="sample_images/kripke1.PNG" alt="hi" class="inline" width="600" height="400"/>
+
+<img src="sample_images/kripke2.PNG" alt="hi" class="inline" width="600" height="400"/>
+
+<img src="sample_images/kripke3.PNG" alt="hi" class="inline" width="600" height="400"/>
