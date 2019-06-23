@@ -2,10 +2,9 @@
 
 # Introduction
 
-When playing games which are not perfect information games, where there is relevant information which might not be available to all players, maintaining knowledge about what other agents in the game know is important for predicting the actions of one's opponents, and thus choosing appropriate actions accordingly. This knowledge can be modeled in epistemic logic, and visualized with kripke models, and in this project we do both with the game Konigrufen, a game in which not only the complete state of the game hidden, but the objectives of each player is not perfectly known. It is our goal to show that 
-```diff
-- so what actually is our goal here? that knowing things about things is good?
-```
+When playing games which are not perfect information games, where there is relevant information which might not be available to all players, maintaining knowledge about what other agents in the game know is important for predicting the actions of one's opponents, and thus choosing appropriate actions accordingly. This knowledge can be modeled in epistemic logic, and visualized with kripke models, and in this project we do both with the game Konigrufen, a game in which not only the complete state of the game hidden, but the objectives of each player is not perfectly known. For a player, or agent, to win the game they need to obtain as many points as possible (or at least more than half of the total points in the game). In order to increase the likelihood of accomplishing this, they need to win as many tricks as possible which yield as many points as possible. Therefore, for every trick they need to try to play the highest card out of all four players (while adhering to the rules). In order to properly do so, all the agents are required to reason what is their best card to play. In this game proper reasoning can only be done when there is knowledge present about an agent's cards and its opponent's cards. Therefore in this implementation of Konigrufen, as the game progresses, public announcements are made based on actions of agents which updates their knowledge. We display the knowledge and reasoning of each agent during the game when it's their turn to play. Additionally, during the game the user is able to switch to a display where visualization of a couple of Kripke models is possible, which are also updated throughout the game. With this project we want to show that including components of epistemic logic in a simulation of a game, allows us to analyze realistic behaviour of agents playing the game.
+
+
 
 # Konigrufen
 ```diff
