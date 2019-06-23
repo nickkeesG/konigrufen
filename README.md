@@ -9,15 +9,26 @@ With this project we want to show that including components of epistemic logic i
 In order to run our program, download the .zip or .tar.gz file. Additionally you will also need [Python](https://www.google.com/) (either version 2.7 or 3.5) and the [Pygame Module](https://www.pygame.org/). To run the Konigrufen program, unzip the folder after downloading it and execute the main.py file with python. On Mac/Linux run the command: python main.py from the command prompt. On Windows the standard Python installer associates the .py extension with a python file, so you should be able to double click main.py in order to run it, or you can also run it in the command prompt if you want with python main.py after locating its directory.
 
 # Konigrufen
-```diff
-+ what is the game (klemen)
-```
+
+Konigrufen is a trick-taking game from Austria, which unlike many games uses tarock cards: 
+
 <img src="sample_images/tarock.jpg" alt="hi" class="inline" width="400" height="800"/>
 
+Players collect points over many games, but for this project we will only be simulating individual games.
+
 ## The Rules
-```diff
-+ maybe include a nice table of the cards and their values or something (klemen)
-```
+/***
+| __Red Suits__ | __Black Suits__ |
+|---------------|-----------------|
+| King          | King            |
+| Queen         | Queen           |
+| Cavalier      | Cavalier        |
+| Jack          | Jack            |
+| 1             | 10              |
+| 2             | 9               |
+| 3             | 8               |
+| 4             | 7               |
+***/
 
 The 54 cards in play are divided into 5 suits, the 4 regular suits (hearts, clubs, diamonds and spades) as well as a fifth suit of trump cards. Each of the 4 regular suits has 8 cards, divided into 4 face cards and 4 number cards, the only quirk relating to these is that with the red suit number cards, the lowest in number is the highest in value/strength and for the two black colored suits, the higher number wins. There are 22 trump cards, 21 numbered trump cards and one fool which in this set of rules counts as the 22nd and highest trump card.
 
