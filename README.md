@@ -31,8 +31,38 @@ Once all the cards are played, whoever had the king called at the start of the g
 - Kripke models
 
 # Object Oriented Implementation of Konigrufen
-In this section we will describe the several classes that we created and how they are integrated in the program
+In this section we will describe the several classes that we created and how they are integrated in the program. In our version of the game we have one player which always starts the game: 'Bruno'. He gets to call the King (determining the teams). Additionally, each game consists of one hand. A new game can be started with new hands, but these are kept independent of each other to simplify the analysis. We also made some further restrictions which we will elaborate on later.
+
 ## Cards
-The cards class is a tuple consisting of four components `(suit,value,image,score)` where suit and image speak for themselves. The distinction between value and score however is that the former is the value the card has during the game (e.g. to win a trick) and the latter is for what the card is worth in score for winning the game. Additionally, the value of a card represents what the card actually is dependent on whether it's a trump or not (e.g. a value of 8 for a non-trump card is a King, a value of 7 is a Queen etcetera). For trump cards it simply resembles the trumps from 1 up to 21, and value 22 represents the Joker.
+The `Card` class is a tuple consisting of four components `(suit,value,image,score)` where suit and image speak for themselves. The distinction between value and score however is that the former is the value the card has during the game (e.g. to win a trick) and the latter is for what the card is worth in score for winning the game. Additionally, the value of a card represents what the card actually is dependent on whether it's a trump or not (e.g. a value of 8 for a non-trump card is a King, a value of 7 is a Queen etcetera). For trump cards it simply resembles the trumps from 1 up to 21, and value 22 represents the Joker. At the start of the game all cards are randomly shuffled and 12 are assigned to each player.
 
 However, it is worth noting that in order to be sure that all interesting cards are included in each game (e.g. the Joker and Kings), we limited the number of cards from 54 to 48, such that each player has exactly 12 cards.  We excluded the first card of each common suit and excluded trump cards '2' and '3'.
+
+## Game State
+One important class to keep track of everything happening in the game is the `game_state` class. It takes three input arguments `(players, model_list, useKnowledge)`. The `model_list` is a list which specifies which Kripke models are to be updated and visualized. `useKnowledge` is a boolean variable which determines whether the agents are to use their knowledge in the game or not. This class contains about 18 variables which are used and updated throughout the game. Some of the most important variables are for example the list of players, what king has been called, who's turn it is, what the leading suit is and what the highest card currently in the game is. 
+
+## Player
+The `Player` class contains 10 variables, as well as 3 functions and takes 3 input arguments: `(name, hand, knowledge)`. The variables are for example the name, the hand, the teammates, the opponents, knowledge and reasoning. Some of these variables are updated throughout the game, such as knowledge which is a class by itself (see next subsection) and the reasoning of the agent in each turn. The player class contains functions such as `determineCard()` which determines what is the best card to play in the current game state. 
+
+### Knowledge
+Each agent has knowledge which is represented in a separate class `Knowledge`. This class is a tuple of `(hasHighestCard, knowsTeammate, trumpAdvantage)` and additionally contains two variables which represent the knowledge of the agent's opponents not possessing a certain suit. Most of this knowledge is unknown to most players at the start of the game. 
+- `hasHighestCard` is a boolean which states whether the agent has the highest card. As it is common knowledge what the highest card in the game is, each player knows whether they do or don't. 
+- `knowsTeammate` is also a boolean which states whether the agent knows its teammate. At the start of the game, only the the player which possesses the called King knows their teammates, all other players have to find out who their teammates and opponents are through public announcement updates. 
+- `trumpAdvantage` is again a boolean which states whether the player knows that it has the majority of trump cards in the game. The total number of trumps is common knowledge as each player can keep track of it and there is a fixed amount. If the player has more than half of the trumps, it certainly has an advantage which then is strategically used.
+- `opponentLacksSuit` is a boolean variable which states whether the agent knows that its opponents don't have a certain suit which can also be found out through public announcements and can be used strategically. The variable `lackedSuits` is a list which contains all the suits that the opponents lack.
+
+### determineCard()
+As mentioned in the section of the `Player` class, there is a function `determineCard()`. In this function the knowledge described in the previous subsection of the player is used to determine what card to play. The function has two cases:
+#### The player starts
+When the player starts and usage of knowledge is enabled in the game, it reasons as follows:
+- If the agent knows that it has the highest card (i.e. `knowledge.hasHighestCard` is true), then it will always play that card as first to be certain it wins that trick and can start again.
+- If the agent knows that it has the majority of trump cards (i.e. `knowledge.trumpAdvantage` is true) then it will play an arbitrary trump card in order to make sure the other players lose more trump cards and being more likely to win the trick.
+- If the agent knows that one of its opponents does not possess a certain suit (i.e. `opponentLacksSuit is true`), and the agent itself does have that suit, then the agent will play that suit. However, this knowledge cannot be used if the agent does not know who its opponents/teammates are. Therefore it is first required to have that knowledge (i.e. `knowsTeammate` is true) in order to strategically use this knowledge. At the start of the game just one player has this knowledge which may be a big advantage.
+
+#### The player doesn't start
+When the player doesn't start, there is not much strategic play it can do as it has to adhere to the rules. However, it can try to give its teammates and its opponents as many and as few points respectively as possible:
+- If I possess the suit that is played, I will play that suit.
+- If I don't possess the suit that is played and it is not a trump, I play a trump card if I have it.
+- If I know who my teammate is and my teammate started this trick, then I play a high valued card.
+- If I know who my opponent is and my opponent started the trick, then I play a low valued card.
+- If I don't know who my teammate is then I just play a random card.
