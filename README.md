@@ -123,7 +123,7 @@ When pressing 'k' the user can access the Kripke View. In this view there is a d
 
 As the game proceeds, more information is presented to the agents and as such they figure out what the teams are. When an agent acquires such knowledge the Kripke model gets updated accordingly which is shown in the image below. In this example, apparently Katrin could not follow the suit that was played first in the trick. However, as this suit is the same as the suit of the called King, the agents now know that Katrin is definitely not in a team with Bruno and the Kripke model is updated accordingly. 
 
-<img src="sample_images/kripke1.5.PNG" alt="hi" class="inline" width="750" height="400"/>
+<img src="sample_images/kripk1.5.PNG" alt="hi" class="inline" width="750" height="400"/>
 
 Eventually the agents figure out what the teams are, which is often when the King itself is played by one of the agents. The Kripke model then turns into the following example.
 
