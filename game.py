@@ -32,6 +32,7 @@ class Game_State:
         self.noSuitPlayer = None
         self.leading_suit = None
         self.gameOver = False
+
 class Knowledge:
     def __init__(self,hasHighestCard,knowsTeammate, trumpAdvantage):
         self.hasHighestCard = hasHighestCard
@@ -53,6 +54,8 @@ class Player:
         self.alone = False
         self.opponents = []
         self.reason = None
+        self.lacks = []
+        self.notWithBrunoidx = None
 
     def contains(self, request):
         for card in self.hand:
@@ -134,6 +137,7 @@ class Player:
 
 
 def updateNoSuit(player,game_state,leading_suit):
+    player.lacks.append(leading_suit)
     game_state.noSuitPlayer = player
     game_state.leading_suit = leading_suit
     for p in game_state.players:
@@ -353,14 +357,26 @@ def updateKripkeTeams(players,game_state):
         for i, p in enumerate(players):
             if p.knowledge.knowsTeammate:
                 exclude = i
-
                 teams.relations[i].append((game_state.teamIdx, game_state.teamIdx))
 
+        for i, p in enumerate(players):
+            if not p.knowledge.knowsTeammate:
+                for j,player in enumerate(players):
+                    if player != players[0] and (game_state.king_called in player.lacks) and p != player:
+                        print("it worked here")
+                        p.notWithBrunoidx = j
+                        print(j)
+
         for i in range(0, 4):
+            teams.relations[i] = []
+            teams.relations[exclude].append((game_state.teamIdx, game_state.teamIdx))
             for j in range(0, 4):
                 for k in range(j, 4):
-                    if i != exclude and j != i and i != k:
+                    if i != exclude and j != i and i != k and k != players[i].notWithBrunoidx and j != players[i].notWithBrunoidx:
+                        print(str(players[i].notWithBrunoidx))
+                        print(str(k))
                         teams.relations[i].append((j, k))
+
     else:
         for i, p in enumerate(players):
             teams.relations[i] = []

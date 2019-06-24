@@ -38,12 +38,15 @@ In the main stage of the game players start playing for tricks, the game proceed
 Once all the cards are played, whoever had the king called at the start of the game, combines their pile of taken tricks with the play maker and the other two players in the game do likewise. Cards are counted in groups of 3, a king is worth 5 points, a queen 4, a knight is worth 3 points a jack is worth 2 and every other card is worth 1 point. If there are 2 face cards in this set of 3, 1 point is deducted from the total and if there are 3 face cards, then 2 points are deducted to make the counting always add up to 70. In addition to the face cards, some trumps have value as well. The number 1 trump, the number 21 trump and the fool are all worth 5 points each and count as face cards when being counted. The difference between the two teams in points is then taken as the score. The only people getting any score from a game are the one who made a play and the one who was holding the king that was called at the start of the round. The other two players were essentially 'defending' or trying to minimize the number of points the other two receive at the end of the round.
 
 ## Including Epistemic Logic 
-```diff
-+ explain how we integrated PAL etc. in the game (klemen?)
-```
-- Knowledge
-- Public announcements
-- Kripke models
+
+### Knowledge
+In order to effectively play konigsrufen, an agent must have some knowledge about the game. Because of the nature of the game, this knowledge has to be broader than what the agent can see from the cards they are holding at the moment. We want to know things about other agents as well, which we can glean from the cards they play. For this we have included two explicit forms of knowledge; teams and highest trump card. The former is key to playing the game effectively. If you are not aware who is on your team you cannot make decisions which would improve your chances of winning the round. Secondly, we represent the knowledge of who has the highest trump card. This is not something that is required for playing the game, however taking this into consideration can further improve chances of winning, if an agent knows that it has the highest trump card, it is aware  that it can win at least one trick with it. While modelling this directly means that we will see that an agent that does not have the highest card can never know for certain which of the other players has the highest card. But this model can also be, in turn used to represent who has trump cards left. When an agent knows that another agent certainly does not have the highest card it is because of one of two factors; either they have it themselves, or the other agent has at some point shown that they no longer have any trump cards left. 
+
+### Public Announcements
+The only way players may 'communicate' about the state of the game once the round starts (after a player has already decided to make a play and called a king) is by playing a card. This is a useful way of looking at this as we can then treat the playing of a card as a public announcement. This allows us to update our kripke models representing knowledge using these public announcements as a basis to do so.
+
+### Higher order knowledge
+To provide an example of how our system deals with higher order knowledge or how we represent it, consider the following situation; the suit that has been called is hearts, so whoever is playing has picked the king of hearts as his partner. Let us assume for the sake of this example that the person playing does not also have the king of hearts. At the start of the game only the player holding the king of hearts knows what the teams are for certain, everyone else only knows what team they are on, and not who is with them or who the second person on the team against them is. Now we introduce the following sequence of events; someone starts with the suit of hearts and everyone must follow suit. The king of hearts is not played this round. This results in the following; the person who is playing, still does not know what the teams are, the person with the king of hearts knows the teams, but now one other person also knows the teams, the person who managed to follow suit with hearts but is also not the person with the king or the person playing the game. This person now knows the teams as well. At this point everyone knows that two people know what the teams are.
 
 # Object Oriented Implementation of Konigrufen
 In this section we will describe the several classes that we created and how they are integrated in the program. In our version of the game we have one player which always starts the game: 'Bruno'. He gets to call the King (determining the teams). Additionally, each game consists of one hand. A new game can be started with new hands, but these are kept independent of each other to simplify the analysis. We also made some further restrictions which we will elaborate on later.
@@ -115,10 +118,17 @@ Below an example can be found of how the game itself looks like. We have four pl
 
 ### Kripke Model View
 When pressing 'k' the user can access the Kripke View. In this view there is a dropdown menu where the user can select a Kripke model they would like to see. In the image below is shown how such a Kripke model looks like for modelling the knowledge of each player about what the teams are. As Bruno always starts the game these are the possible worlds that are left in the game. Bruno also calls the King, therefore the player in possession of this King knows the true world of team (colored yellow). In this example Nadine has the called king and therefore is the only one that knows she and Bruno form a team. 
+
 <img src="sample_images/kripke1.PNG" alt="hi" class="inline" width="750" height="400"/>
 
-As the game proceeds, more information is presented to the agents and eventually the other agents also find out what the teams are. When an agent acquires such knowledge the Kripke model gets updated accordingly which is shown in the image below, where now all agents are aware of the teams. 
+As the game proceeds, more information is presented to the agents and as such they figure out what the teams are. When an agent acquires such knowledge the Kripke model gets updated accordingly which is shown in the image below. In this example, apparently Katrin could not follow the suit that was played first in the trick. However, as this suit is the same as the suit of the called King, the agents now know that Katrin is definitely not in a team with Bruno and the Kripke model is updated accordingly. 
+
+<img src="sample_images/kripk1.5.PNG" alt="hi" class="inline" width="750" height="400"/>
+
+Eventually the agents figure out what the teams are, which is often when the King itself is played by one of the agents. The Kripke model then turns into the following example.
+
 <img src="sample_images/kripke2.PNG" alt="hi" class="inline" width="750" height="400"/>
 
 Another example, shown below, is each agents knowledge about who possesses the highest card in similar fashion as the team-knowledge model. 
 <img src="sample_images/kripke3.PNG" alt="hi" class="inline" width="750" height="400"/>
+
