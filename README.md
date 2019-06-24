@@ -122,7 +122,7 @@ As the game proceeds, more information is presented to the agents and as such th
 
 <img src="sample_images/kripke1.5.PNG" alt="hi" class="inline" width="750" height="400"/>
 
-Eventually the agents figure out what the teams are, which is often when the King itself is played by one of the agents. The Kripke model then turns into the following example.
+Eventually the agents figure out what the teams are, which is often when the King itself is played by one of the agents. The Kripke model then turns into the following.
 
 <img src="sample_images/kripke2.PNG" alt="hi" class="inline" width="750" height="400"/>
 
