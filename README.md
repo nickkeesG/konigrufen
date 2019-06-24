@@ -9,15 +9,27 @@ With this project we want to show that including components of epistemic logic i
 In order to run our program, download the .zip or .tar.gz file. Additionally you will also need [Python](https://www.google.com/) (either version 2.7 or 3.5) and the [Pygame Module](https://www.pygame.org/). To run the Konigrufen program, unzip the folder after downloading it and execute the main.py file with python. On Mac/Linux run the command: python main.py from the command prompt. On Windows the standard Python installer associates the .py extension with a python file, so you should be able to double click main.py in order to run it, or you can also run it in the command prompt if you want with python main.py after locating its directory.
 
 # Konigrufen
-```diff
-+ what is the game (klemen)
-```
+
+Konigrufen is a trick-taking game from Austria, which unlike many games uses tarock cards: 
+
+<img src="sample_images/tarock.jpg" alt="hi" class="inline" width="400" height="800"/>
+
+Players collect points over many games, but for this project we will only be simulating individual games.
+
 ## The Rules
-```diff
-+ maybe include a nice table of the cards and their values or something (klemen)
-```
 
 The 54 cards in play are divided into 5 suits, the 4 regular suits (hearts, clubs, diamonds and spades) as well as a fifth suit of trump cards. Each of the 4 regular suits has 8 cards, divided into 4 face cards and 4 number cards, the only quirk relating to these is that with the red suit number cards, the lowest in number is the highest in value/strength and for the two black colored suits, the higher number wins. There are 22 trump cards, 21 numbered trump cards and one fool which in this set of rules counts as the 22nd and highest trump card.
+
+| __Red Suits__ | __Black Suits__ |
+|---------------|-----------------|
+| King          | King            |
+| Queen         | Queen           |
+| Cavalier      | Cavalier        |
+| Jack          | Jack            |
+| 1             | 10              |
+| 2             | 9               |
+| 3             | 8               |
+| 4             | 7               |
 
 The game starts with first 6 cards being set aside for later, then each player getting dealt 12 cards. The cards are dealt in a counterclockwise order starting with the person sitting immediately to the left of the dealer. Once the cards are dealt, each player is asked to state their intentions for this game, this is done in the opposite (clockwise) order starting with the person sitting to the right of the dealer. Each player may either do nothing or play. There are several things someone who wants to make a play can decide, all relating to the 6 cards set aside at the start of the game. They may play with 3, 2, 1 or none of the cards in the pile set aside or the 'talon'. This means that the talon is either divided into two sets of 3 cards (in order) 3 sets of 2 cards or 6 individual cards by the dealer (or someone else in case the dealer is the one making the play). Before the cards in the talon are opened, the person making the play must call a king of one of the four suits to his side. In the event that this king is in the talon, they now play alone. The play maker is allowed to take one of the sets of cards from the talon, either one of the groupings of 3 if this was the number they chose or one of the other configurations. They take these cards into their deck and place the corresponding number of cards face down in front of them as a start to their collection pile. any points in this pile will count towards the total number of points they manage to accrue in the trick taking stage of the game.
 
@@ -93,9 +105,20 @@ This class represents the world of a team and has `(team1, team2, true_world, po
 ## Visualization (view.py)
 In this class everything we implemented is visualized for the user. Using Pygame allows us to visualize all the components of the games which we consider as three components: on the left the message box which displays all information of the game such as player's reasoning, knowledge and common game information. On the right we have the actual game's GUI, in which the cards of the agents are visible and which cards are being played. Finally we have implemented a Kripke view in which Kripke models can be selected (this view can be accessed by pressing 'k'. 
 ### Message box
-In the message box first some instructions are displayed for the user: pressing spacebar makes the game go to the next turn, pressing 'n' makes a new game, pressing 'k' enables the Kripke-view. Additionally, for the agent currently playing its knowledge is displayed, after which it's reasoning is displayed for playing the card it played. Finally public announcements and common knowledge are displayed.
+In the message box first some instructions are displayed for the user: pressing spacebar makes the game go to the next turn, pressing 'n' makes a new game, pressing 'k' enables the Kripke-view. Additionally, for the agent currently playing its knowledge is displayed, after which it's reasoning is displayed for playing the card it played. Finally public announcements and common knowledge are displayed. Below some examples are presented of the message box at the start of the game, an intermediate stage of the game and the end of the game respectively.
 
 <img src="sample_images/msgbox.PNG" alt="hi" class="inline" width="250" height="400"/><img src="sample_images/msgbox2.PNG" alt="hi" class="inline" width="250" height="400"/><img src="sample_images/msgbox3.PNG" alt="hi" class="inline" width="250" height="400"/> 
 
 ### Game GUI
+Below an example can be found of how the game itself looks like. We have four players, one at each side of the board and in the middle we have the card disposal area. 
+<img src="sample_images/gamegui.PNG" alt="hi" class="inline" width="600" height="400"/>
 
+### Kripke Model View
+When pressing 'k' the user can access the Kripke View. In this view there is a dropdown menu where the user can select a Kripke model they would like to see. In the image below is shown how such a Kripke model looks like for modelling the knowledge of each player about what the teams are. As Bruno always starts the game these are the possible worlds that are left in the game. Bruno also calls the King, therefore the player in possession of this King knows the true world of team (colored yellow). In this example Nadine has the called king and therefore is the only one that knows she and Bruno form a team. 
+<img src="sample_images/kripke1.PNG" alt="hi" class="inline" width="750" height="400"/>
+
+As the game proceeds, more information is presented to the agents and eventually the other agents also find out what the teams are. When an agent acquires such knowledge the Kripke model gets updated accordingly which is shown in the image below, where now all agents are aware of the teams. 
+<img src="sample_images/kripke2.PNG" alt="hi" class="inline" width="750" height="400"/>
+
+Another example, shown below, is each agents knowledge about who possesses the highest card in similar fashion as the team-knowledge model. 
+<img src="sample_images/kripke3.PNG" alt="hi" class="inline" width="750" height="400"/>
