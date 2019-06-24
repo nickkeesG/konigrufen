@@ -132,3 +132,7 @@ Eventually the agents figure out what the teams are, which is often when the Kin
 Another example, shown below, is each agents knowledge about who possesses the highest card in similar fashion as the team-knowledge model. 
 <img src="sample_images/kripke3.PNG" alt="hi" class="inline" width="750" height="400"/>
 
+# Conclusion and Future Work
+We have shown in this project that we can model knowledge of agents throughout a game of Konigsrufen quite well using components of Epistemic Logic. We have seen that including knowledge like this, the knowledge of agents increases throughout the game caused by public announcements. 
+
+We have simplified the game in that we excluded 6 cards which originally take part of a selection process prior to each game. Additionally, the players who don't start could have more efficient strategies and the number of possible worlds for teams could be extended if not Bruno would always start the game. These are things that may be considered to be extended in future projects relating to this game for an even completer modelling of knowledge of agents in this game.
